@@ -78,10 +78,13 @@ pipeline {
             }
             steps {
                 script {
+                    env.ENV = input message: "Select the environment to deploy to", ok: "Done", [choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: '')]
+
                     gv.deployApp()
                     // variable is not accessed through "params." prefix
                     echo "Deploying to ${ONE}"
                     echo "Deploying to ${TWO}"
+                    echo "Deploying to ${ENV}"
                 }
 
                 echo 'deploying the application...'
