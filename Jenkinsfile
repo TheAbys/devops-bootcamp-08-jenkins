@@ -1,3 +1,6 @@
+// define global groovy variable here
+def gv
+
 pipeline {
     agent any
     tools {
@@ -15,7 +18,14 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description: '')
     }
     stages {
-
+        stage("init") {
+            steps {
+                script {
+                    // initialize the global groovy variable through loading the script
+                    gv = load "script.groovy"
+                }
+            }
+        }
         stage("build") {
             /*when {
                 expression {
@@ -26,6 +36,9 @@ pipeline {
                 // and there were changes in the code
             }*/
             steps {
+                script {
+                    gv.buildApp()
+                }
                 echo 'building the application...'
                 echo "building version ${NEW_VERSION}" //variable is interpreted
                 //echo 'building version ${NEW_VERSION}' //variable is not interpreted
@@ -46,16 +59,23 @@ pipeline {
                 }
             }
             steps {
+                script {
+                    gv.testApp()
+                }
                 echo 'testing the application...'
             }
         }
 
         stage("deploy") {
             steps {
+                script {
+                    gv.deployApp()
+                }
+
                 echo 'deploying the application...'
 
                 // using on environmental level
-                echo "deploying version ${params.VERSIOn}"
+                echo "deploying version ${params.VERSION}"
 
                 // using just in this current step
                 // basically extracts the credentials in to variables USER and PWD
