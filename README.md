@@ -198,3 +198,13 @@ Afterwards the port 8083 must be exposed so I've stopped the running Nexus conta
     docker ps
     docker container rm <container-hash>
     docker run -d -p 8081:8081 -p 8083:8083 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
+
+# 7 - Freestyle to Pipeline Job / 8 - Intro to Pipeline Job
+
+Basically through a scripted pipeline we are versioning the whole build, test and deploy process within our application git repository and we have much more possibilties to handle this process
+
+While it is possible to configure the same or close to the same through freestyle it has very high maintainance cost as everything has to be configured through UI, Plugins, etc.
+
+Doing it through a Jenkinsfile we can write declarative pipelines (see Jenkinsfile in current project) or write it directly with groovy language.
+Groovy gives more options but for learning is also more complex than the declarative style.
+Groovy also allows the execution of Groovy libraries. Those must be allowed by the Jenkins admin.
