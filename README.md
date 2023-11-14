@@ -208,3 +208,8 @@ While it is possible to configure the same or close to the same through freestyl
 Doing it through a Jenkinsfile we can write declarative pipelines (see Jenkinsfile in current project) or write it directly with groovy language.
 Groovy gives more options but for learning is also more complex than the declarative style.
 Groovy also allows the execution of Groovy libraries. Those must be allowed by the Jenkins admin.
+
+# 9 - Jenkinsfile Syntax
+
+See comments within Jenkinsfile
+All available environmental variables within Jenkins can be found on http://138.68.111.144:8080/env-vars.html/ after installation
