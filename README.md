@@ -144,3 +144,57 @@ And set the right permission
 login as jenkins
 
     docker exec -it <container-hash> bash
+
+lets build a Docker image and push it to docker hub or any other repository
+
+    docker build -t <docker-hub-repo>:jma-1.0 .
+
+Login with username and password
+
+    docker login -u $USERNAME -p $PASSWORD
+
+Improved way
+
+    c
+
+Push the image
+
+    docker push <docker-hub-repo>:jma-1.0
+
+### Push Dockerimage to our Nexus Repository
+
+Nexus repository is still unsecure, we have to add insecure-repositories to Docker
+
+    vim /etc/docker/daemon.json
+
+    {
+        "insecure-repositories": ["64.226.110.153:8083"]
+    }
+
+We now must restart docker
+
+    systemctl restart docker
+
+Our running container was killed when we restarted docker, we have to restart it
+
+    docker ps -a
+    docker start <container-hash>
+
+Because we previously made the permission changes in the container and it was restartet we lost the permissions
+
+    docker exec -u 0 -it <container-hash> bash
+    ls -l /var/run/docker.sock
+    chmod 666 /var/run/docker.sock
+    exit
+
+I've realized that I'm connecting to our first Nexus installation and not to the second one with Docker.
+I saw that as an opportunity to check my learnings.
+
+I've created a new Docker repository on Nexus and set the http port to 8083
+The droplet used the same firewall configuration as the other one therefore i did not have to add the inbound port 8083 here
+
+Afterwards the port 8083 must be exposed so I've stopped the running Nexus container, deleted it and restarted the container with an additional parameter
+
+    docker ps
+    docker container rm <container-hash>
+    docker run -d -p 8081:8081 -p 8083:8083 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
