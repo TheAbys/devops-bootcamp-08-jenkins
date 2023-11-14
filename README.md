@@ -87,3 +87,60 @@ I've had to use my private key and some extra configuration within Jenkins to co
 
 On Jenkins /var/jenkins_home/jobs i can find all the generated jobs
 Under /var/jenkins_home/workspace there is the checked out code from my repository
+
+We've added a new Test AppTest.java and configured the Freestyle Build Job so that it executes
+
+    maven test
+    maven package
+
+Within the build console output we see that the tests were executed
+
+    [INFO] -------------------------------------------------------
+    [INFO]  T E S T S
+    [INFO] -------------------------------------------------------
+    [INFO] Running AppTest
+    [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in AppTest
+    [INFO] 
+    [INFO] Results:
+    [INFO] 
+    [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+## 6 - Docker in Jenkins
+
+We want to use Docker within our Build Jobs.
+Therefore we need to make Docker available within Jenkins.
+
+We stop our current container
+
+    docker ps
+    docker stop <container-hash>
+
+We can see that the volume we previously created still exists
+
+    docker volume ls
+
+Now we start a new container like before, but we mount the Docker installation into it
+
+    docker run -p 8080:8080 -p 50000:50000 -d \
+    -v jenkins_home:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    jenkins/jenkins:lts
+
+Again connect to the container (as root -u 0)
+
+    docker ps
+    docker exec -u 0 -it <container-hash> bash
+
+We need to install docker
+
+    curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall
+
+And set the right permission
+
+    ls -l /var/run/docker.sock
+    chmod 666 /var/run/docker.sock
+    exit
+
+login as jenkins
+
+    docker exec -it <container-hash> bash
