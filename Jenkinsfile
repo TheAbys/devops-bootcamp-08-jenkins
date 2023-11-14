@@ -60,7 +60,7 @@ pipeline {
                 // using just in this current step
                 // basically extracts the credentials in to variables USER and PWD
                 withCredentials([
-                    usernamePassword(credentials: 'server-credentials', usernameVariable: USER, passwordVariable: PWD)
+                    usernamePassword(credentials: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
                 ]) {
                     sh "some script ${USER} ${PWD}"
                 }
