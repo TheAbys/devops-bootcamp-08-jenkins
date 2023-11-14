@@ -67,9 +67,19 @@ pipeline {
         }
 
         stage("deploy") {
+            // input parameter, will only be available in the current scope
+            input {
+                message "Select the environment to deploy to"
+                ok "Done"
+                parameters {
+                    choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: '')
+                }
+            }
             steps {
                 script {
                     gv.deployApp()
+                    // variable is not accessed through "params." prefix
+                    echo "Deploying to ${ENV}"
                 }
 
                 echo 'deploying the application...'
