@@ -51,7 +51,7 @@ Get the current version of os (this helps to find the correct installation guide
 The script is not up-to-date anymore
     curl -sL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
 
-Correct solution
+Correct solution (https://github.com/nodesource/distributions)
     apt update
     apt install -y ca-certificates curl gnupg
     mkdir -p /etc/apt/keyrings
@@ -63,3 +63,27 @@ Correct solution
     apt install nodejs -y
 
 
+## 5 - Jenkins Basics Demo - Freestyle Job
+
+We create a new freestyle job and don't change anything
+Under Build Steps we add a new Build Step "Execute Shell"
+
+    npm --version
+
+Here we can execute npm because we've installed in directly on the container
+Maven for example we did not install that way, therefore we cannot use it here
+
+But we can add a Maven Build Step through Execute Maven Goal where we choose our previously defined Maven and add
+
+    --version
+
+Within Jenkins we can now run Build Now which results in a new build we can open afterwards
+Through Console Output we can see what Jenkins executed and with that the version of npm an Maven
+
+If we add the Plugin for NodeJs we get the module available within Build Steps like we did with Maven
+
+Update the Job by adding my git repository.
+I've had to use my private key and some extra configuration within Jenkins to connect to my repository.
+
+On Jenkins /var/jenkins_home/jobs i can find all the generated jobs
+Under /var/jenkins_home/workspace there is the checked out code from my repository
