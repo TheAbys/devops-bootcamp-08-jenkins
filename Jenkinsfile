@@ -67,7 +67,7 @@ pipeline {
             }
         }
 
-        post {
+        //post {
             /*always {
                 // whatever happens, success,failure,... this will always execute
             }*/
@@ -77,6 +77,6 @@ pipeline {
             /*failure {
                 // will happen on failure
             }*/
-        }
+        //}
     }
 }
