@@ -1,3 +1,6 @@
+#!/user/bin/env groovy
+//if there was no def gv variable definition we would need to use the _ as postfix
+//@Library("jenkins-shared-library")_
 // define global groovy variable here
 def gv
 
