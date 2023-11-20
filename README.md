@@ -218,3 +218,9 @@ All available environmental variables within Jenkins can be found on http://138.
 
 Moved Jenkinsfile to ExampleJenkinsfile
 Created new Jenkinsfile
+
+# 13 - Credentials in Jenkins
+
+Credentials can have different types like "Username with Password" or "Secret" or ... and through plugins it is possible to add further types.
+The scope defines in which scope the credentials can be used. System => Jenkins server, Global => everywhere, Multi-Branch-Pipeline => project (folder)
+Good practise to use credentials on folders.
