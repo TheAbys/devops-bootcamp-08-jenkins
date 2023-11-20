@@ -33,7 +33,7 @@ pipeline {
         stage("build image") {
             steps {
                 script {
-                    buildImage()
+                    buildImage 'java-maven-app:1.2'
                 }
             }
         }
