@@ -1,117 +1,35 @@
-// define global groovy variable here
-def gv
-
 pipeline {
     agent any
     tools {
-        // does not work for every tool, just for maven gradle and jdk
-        // maven-3.9 is the name of the installation within Jenkins
         maven "maven-3.9"
     }
-    environment {
-        NEW_VERSION = '1.3.0'
-        SERVER_CREDENTIALS = credentials('server-credentials')
-    }
-    parameters {
-        //string(name: 'VERSION', defaultValue: '', description: 'version to deploy on prod')
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'executeTests', defaultValue: true, description: '')
-    }
     stages {
-        stage("init") {
+        stage("build jar") {
             steps {
                 script {
-                    // initialize the global groovy variable through loading the script
-                    gv = load "script.groovy"
+                    echo "building the application..."
+                    sh "mvn package"
                 }
             }
         }
-        stage("build") {
-            /*when {
-                expression {
-                    // environmental variable from Jenkins
-                    BRANCH_NAME == 'dev' && CODE_CHANGES == true
-                }
-                // will just execute if the current branch is 'dev'
-                // and there were changes in the code
-            }*/
+        stage("build image") {
             steps {
                 script {
-                    gv.buildApp()
+                    echo "building the docker image..."
+                    withCredentials([usernamePassword(credentialsId: "nexus-docker-repo", passwordVariable: "PASS", usernameVariable: "USER")]){
+                        sh 'docker build -t 64.226.110.153:8083/1.2 .'
+                        sh 'echo $PASS | docker login -u $USER --password-stdin 64.226.110.153:8083'
+                        sh 'docker push 64.226.110.153:8083/1.2'
+                    }
                 }
-                echo 'building the application...'
-                echo "building version ${NEW_VERSION}" //variable is interpreted
-                //echo 'building version ${NEW_VERSION}' //variable is not interpreted
             }
         }
-
-        stage("test") {
-            /*when {
-                expression {
-                    // environmental variable from Jenkins
-                    BRANCH_NAME == 'dev' 
-                }
-                // will just execute if the current branch is 'dev'
-            }*/
-            when {
-                expression {
-                    params.executeTests
-                }
-            }
-            steps {
-                script {
-                    gv.testApp()
-                }
-                echo 'testing the application...'
-            }
-        }
-
         stage("deploy") {
-            // input parameter, will only be available in the current scope
-            input {
-                message "Select the environment to deploy to"
-                ok "Done"
-                parameters {
-                    choice(name: 'ONE', choices: ['dev', 'staging', 'prod'], description: '')
-                    choice(name: 'TWO', choices: ['dev', 'staging', 'prod'], description: '')
-                }
-            }
             steps {
                 script {
-                    env.ENV = input message: "Select the environment to deploy to", ok: "Done", parameters: [choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: '')]
-
-                    gv.deployApp()
-                    // variable is not accessed through "params." prefix
-                    echo "Deploying to ${ONE}"
-                    echo "Deploying to ${TWO}"
-                    echo "Deploying to ${ENV}"
-                }
-
-                echo 'deploying the application...'
-
-                // using on environmental level
-                echo "deploying version ${params.VERSION}"
-
-                // using just in this current step
-                // basically extracts the credentials in to variables USER and PWD
-                withCredentials([
-                    usernamePassword(credentialsId: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
-                ]) {
-                    echo "some script $USER $PWD"
+                    echo "deploying the application..."
                 }
             }
         }
-
-        //post {
-            /*always {
-                // whatever happens, success,failure,... this will always execute
-            }*/
-            /*success {
-                // will happen on success
-            }*/
-            /*failure {
-                // will happen on failure
-            }*/
-        //}
     }
 }

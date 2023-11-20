@@ -213,3 +213,8 @@ Groovy also allows the execution of Groovy libraries. Those must be allowed by t
 
 See comments within Jenkinsfile
 All available environmental variables within Jenkins can be found on http://138.68.111.144:8080/env-vars.html/ after installation
+
+# 10 - Create complete Pipeline
+
+Moved Jenkinsfile to ExampleJenkinsfile
+Created new Jenkinsfile
