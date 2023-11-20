@@ -33,7 +33,9 @@ pipeline {
         stage("build image") {
             steps {
                 script {
-                    buildImage 'java-maven-app:1.2'
+                    buildImage 'java-maven-app:2.0'
+                    dockerLogin()
+                    dockerPush 'java-maven-app:2.0'
                 }
             }
         }
