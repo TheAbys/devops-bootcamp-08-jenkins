@@ -224,3 +224,16 @@ Created new Jenkinsfile
 Credentials can have different types like "Username with Password" or "Secret" or ... and through plugins it is possible to add further types.
 The scope defines in which scope the credentials can be used. System => Jenkins server, Global => everywhere, Multi-Branch-Pipeline => project (folder)
 Good practise to use credentials on folders.
+
+# 15 - Webhooks - Trigger Pipeline
+
+We can configure GitLab/GitHub so that Jenkins is able to reach them but also they are able to access Jenkins. This also means, that Jenkins can't be hosted locally in that case. It must be reachable through the internet.
+
+Some specific project settings must be done so that everything works and an automatic build triggers.
+
+I'm using GitHub for version controll, but sadly the Jenkins GitHub plugin doesn't work.
+It is not possible to configure the correct credentials.
+
+The "Multibranch Scan Webhook Trigger"-Plugin has vunerability issues and its development has stopped it seems.
+Maybe https://plugins.jenkins.io/generic-webhook-trigger/ can be used instead.
+
