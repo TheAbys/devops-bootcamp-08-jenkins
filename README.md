@@ -259,3 +259,7 @@ In this case majorversion and nextMajorVersion, minorVersion and nextMinorversio
 
 Updated the Jenkinsfile so that it will use the version increment
 Worked like a charm
+
+# 16 - Dynamically Increment Application version in Jenkins Pipeline - Part 2
+
+The version change of pom.xml is never committed therefore the version increment is not persistant.
