@@ -256,3 +256,6 @@ In this case majorversion and nextMajorVersion, minorVersion and nextMinorversio
     mvn build-helper:parse-version versions:set \
     -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} \
     versions:commit
+
+Updated the Jenkinsfile so that it will use the version increment
+Worked like a charm
