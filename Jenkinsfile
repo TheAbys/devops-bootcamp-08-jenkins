@@ -12,46 +12,33 @@ pipeline {
         maven "maven-3.9"
     }
     stages {
-        stage("init") {
+        stage("increment version") {
             steps {
                 script {
-                    gv = load "script.groovy"
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                 }
             }
         }
-        stage("test") {
+        stage("build app") {
             steps {
                 script {
-                    echo "testing the application..."
-                    echo "Executing pipeline for branch $BRANCH_NAME"
-                }
-            }
-        }
-        stage("build jar") {
-            steps {
-                script {
-                    buildJar()
+                    echo 'building the application...'
+                    sh 'mvn package'
                 }
             }
         }
         stage("build image") {
             steps {
                 script {
-                    buildImage 'java-maven-app:2.0'
+                    buildImage(IMAGE_NAME)
                     dockerLogin()
-                    dockerPush 'java-maven-app:2.0'
-                }
-            }
-        }
-        stage("deploy") {
-            when {
-                expression {
-                    BRANCH_NAME == "master"
-                }
-            }
-            steps {
-                script {
-                    echo "deploying the application..."
+                    dockerPush(IMAGE_NAME)
                 }
             }
         }

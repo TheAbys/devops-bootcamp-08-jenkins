@@ -237,3 +237,22 @@ It is not possible to configure the correct credentials.
 The "Multibranch Scan Webhook Trigger"-Plugin has vunerability issues and its development has stopped it seems.
 Maybe https://plugins.jenkins.io/generic-webhook-trigger/ can be used instead.
 
+# 16 - Dynamically Increment Application version in Jenkins Pipeline - Part 1
+
+4.2.1 => MAJOR.MINOR.PATCH
+Major means huge upgrade of features, redone features etc.
+Minor means new features, backwards-compatible, API features
+Patch means minor changes and bugfixes, no API changes
+
+-SNAPSHOT is used for development
+
+different ways of versioning, but there are standards and best practises
+
+All package managers like maven, gradle, npm, ... have commands to upgrade version
+
+Basically creates a copy of the pom.xml and updates the version
+In this case majorversion and nextMajorVersion, minorVersion and nextMinorversion, incrementalVersion and nextIncrementalVersion do exist
+
+    mvn build-helper:parse-version versions:set \
+    -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} \
+    versions:commit
