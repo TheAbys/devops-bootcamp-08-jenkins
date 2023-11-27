@@ -263,3 +263,9 @@ Worked like a charm
 # 16 - Dynamically Increment Application version in Jenkins Pipeline - Part 2
 
 The version change of pom.xml is never committed therefore the version increment is not persistant.
+
+If the webhook was configured and the automatic version update commit is triggered by jenkins this means a loop would occur.
+Solution: Detect wether the last commit was by jenkins and if so skip it. There is a plugin for it "Ignore Commiter Strategy".
+
+I think this shows why a lot of CI/CD configuration is done with one manufacturer like Azure DevOps or Bitbucket.
+It is less of a hassle to configure everything.

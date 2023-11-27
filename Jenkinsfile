@@ -50,13 +50,13 @@ pipeline {
                         sh 'git config --global user.name "jenkins"'
 
                         sh "git status"
-                        sh "git branch"
+                        sh "git branch" // XX jenkins checks out the commit and not the branch itself
                         sh "git config --list"
 
                         sh "git remote set-url origin https://${USER}:${PASS}@github.com/TheAbys/devops-bootcamp-08-jenkins.git"
                         sh 'git add .'
                         sh 'git commit -m "CI: version bump"'
-                        sh 'git push origin HEAD:jenkins-shared-lib'
+                        sh 'git push origin HEAD:jenkins-shared-lib' // see XX: that's why it is necessary to tell push where exactly to push
                     }
                 }
             }
